@@ -18,6 +18,10 @@ Shader "Graph/Point Surface" {
         float _Smoothness;
         // inout indicates the parameter is passed to the function and used in the output
         void ConfigureSurface (Input input, inout SurfaceOutputStandard surface) {
+            // This works as both Albedo and worldPos have the shape of (a, b, c)
+            // i.e., (x, y, z) maps directly to (r, g, b)
+            // Note that we have to * 0.5 + 0.5 to fit within the range 0-1 as negative color isnt real
+            surface.Albedo = input.worldPos * 0.5 + 0.5;
             surface.Smoothness = _Smoothness;
         }
         ENDCG
