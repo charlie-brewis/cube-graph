@@ -33,6 +33,8 @@ public class Graph : MonoBehaviour {
             point.localPosition = position;
             // rescales the points to fit within -1-1 range
             point.localScale = scale;
+
+            point.SetParent(transform, false);
         }
     }
 }
