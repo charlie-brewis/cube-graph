@@ -21,7 +21,9 @@ Shader "Graph/Point Surface" {
             // This works as both Albedo and worldPos have the shape of (a, b, c)
             // i.e., (x, y, z) maps directly to (r, g, b)
             // Note that we have to * 0.5 + 0.5 to fit within the range 0-1 as negative color isnt real
-            surface.Albedo = input.worldPos * 0.5 + 0.5;
+            // surface.Albedo = input.worldPos * 0.5 + 0.5;
+            // Z (b) is always the same here so we can discard it
+            surface.Albedo.xy = input.worldPos.rg * 0.5 + 0.5;
             surface.Smoothness = _Smoothness;
         }
         ENDCG

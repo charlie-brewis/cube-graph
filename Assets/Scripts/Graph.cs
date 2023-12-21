@@ -28,7 +28,7 @@ public class Graph : MonoBehaviour {
             Transform point = Instantiate(pointPrefab);
             position.x = (i + 0.5f) * xStep - 1f;
             // y = f(x)
-            position.y = position.x * position.x;
+            position.y = position.x * position.x * position.x;
 
             point.localPosition = position;
             // rescales the points to fit within -1-1 range
