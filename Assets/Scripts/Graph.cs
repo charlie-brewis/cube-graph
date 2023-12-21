@@ -5,6 +5,10 @@ public class Graph : MonoBehaviour {
     [SerializeField]
     Transform pointPrefab;
 
+    // Range defines the range of values the field can take
+    [SerializeField, Range(10, 100)]
+    int resolution = 10;
+
     void Awake() { 
         // Transform point = Instantiate(pointPrefab);
         // // This method transforms the Vector3 position by (1, 0, 0)
@@ -23,6 +27,9 @@ public class Graph : MonoBehaviour {
             // C# can tell this is inside a loop and so this definition is allowed
             Transform point = Instantiate(pointPrefab);
             position.x = (i + 0.5f) / 5f - 1f;
+            // y = f(x)
+            position.y = position.x * position.x;
+
             point.localPosition = position;
             // rescales the points to fit within -1-1 range
             point.localScale = scale;
