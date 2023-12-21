@@ -18,15 +18,15 @@ public class Graph : MonoBehaviour {
         // point = Instantiate(pointPrefab);
         // point.localPosition = Vector3.right * 2f;
 
-        // int i = 0;
-        // while (i++ < 10) {
-        var scale = Vector3.one / 5f;
+        // defines the space between points to keep graph within the domain -1-1
+        float xStep = 2f / resolution;
+        var scale = Vector3.one * xStep;
         // Initialise the position as (0, 0, 0)
         var position = Vector3.zero;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < resolution; i++) {
             // C# can tell this is inside a loop and so this definition is allowed
             Transform point = Instantiate(pointPrefab);
-            position.x = (i + 0.5f) / 5f - 1f;
+            position.x = (i + 0.5f) * xStep - 1f;
             // y = f(x)
             position.y = position.x * position.x;
 
