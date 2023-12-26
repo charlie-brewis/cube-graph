@@ -4,6 +4,21 @@ using static UnityEngine.Mathf;
 // Static as this class will work as a static library for mathematical functions, instead of an object type
 public static class FunctionLibrary {
 
+    // This is essentially an abstract method to define a shape/type (Function) for all our wave functions
+    public delegate float Function (float x, float y);
+
+    public static Function GetFunction (int index) {
+        if (index == 0) {
+            return Wave;
+        } 
+        else if (index == 1) {
+            return DoubleWave;
+        } 
+        else {
+            return Ripple;
+        }
+    }
+
     // f(x, t) = sin(pi(x + t))
     public static float Wave(float x, float t) {
         return Sin(PI * (x + t));
