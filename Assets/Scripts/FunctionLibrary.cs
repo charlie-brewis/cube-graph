@@ -17,4 +17,10 @@ public static class FunctionLibrary {
         return y * (2f / 3f);
     }
 
+    public static float Ripple (float x, float t) {
+        float distFromXCent = Abs(x);
+        float y = Sin(PI * (4f * distFromXCent - t)) / (1f + 10f * distFromXCent);
+        return y;
+    }
+
 }
