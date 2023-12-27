@@ -27,42 +27,37 @@ public class Graph : MonoBehaviour {
         // defines the space between points to keep graph within the domain -1-1
         float step = 2f / resolution;
         var scale = Vector3.one * step;
-        // Initialise the position as (0, 0, 0)
-        var position = Vector3.zero;
 
         // Objects like arrays must be initialized. Here we initialize a size of resolution squared to fill the x and z coordinates
         points = new Transform[resolution * resolution];
 
         for (int i = 0, x = 0, z = 0; i < points.Length; i++, x++) {
-            // Reset x at the end of each row
-            if (x == resolution) {
-                x = 0;
-                z++;    
-            }
             // C# can tell this is inside a loop and so this definition is allowed
             Transform point = Instantiate(pointPrefab);
             // Adding the point to the array of points
             points[i] = point;
-            position.x = (x + 0.5f) * step - 1f;
-            position.z = (z + 0.5f) * step - 1f;            
-
-            point.localPosition = position;
             // rescales the points to fit within -1-1 range
             point.localScale = scale;
-
             //! I dont know what this is
             point.SetParent(transform, false);
         }
     }
 
     void Update() {
-        float time = Time.time;
         FunctionLibrary.Function func = FunctionLibrary.GetFunction(functionKey);
-        for (int i = 0; i < points.Length; i++) {
-            Transform point = points[i];
-            Vector3 position = point.localPosition;
-            position.y = func(position.x, position.z, time);
-            point.localPosition = position;
+        float time = Time.time;
+        float step = 2f / resolution;
+        float v = 0.5f * step - 1f;
+        for (int i = 0, x = 0, z = 0; i < points.Length; i++, x++) {
+            if (x == resolution) {
+                x = 0;
+                z++; 
+                // v only needs to be recalculated when z changes, therefore it is defined here
+                v = (z + 0.5f) * step - 1f;  
+            } 
+            float u = (x + 0.5f) * step - 1f;
+            points[i].localPosition = func(u, v, time)
         }
+
     }
 }

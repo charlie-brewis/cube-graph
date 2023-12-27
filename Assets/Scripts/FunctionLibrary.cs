@@ -5,7 +5,7 @@ using static UnityEngine.Mathf;
 public static class FunctionLibrary {
 
     // This is essentially an abstract method to define a shape/type (Function) for all our wave functions
-    public delegate float Function (float x, float z, float y);
+    public delegate Vector3 Function (float u, float v, float y);
 
     // Enum FunctionName type defines the valid names allowed within functions
     // I.e., FunctionName is the key to functions value - Treated as strings
@@ -17,23 +17,34 @@ public static class FunctionLibrary {
     }
 
     // f(x, t) = sin(pi(x + t))
-    public static float Wave(float x, float z, float t) {
-        return Sin(PI * (x + z + t));
+    public static Vector3 Wave(float u, float v, float t) {
+        Vector3 outPoint;
+        outPoint.x = u;
+        outPoint.y = Sin(PI * (x + z + t));
+        outPoint.z = v;
+        return outPoint;
     }
 
-    public static float DoubleWave(float x, float z, float t) {
-        float y = Sin(PI * (x + t * 0.5f));
-        y += 0.5f * Sin(2f * PI * (z + t));
-        y += Sin(PI * (x + z + 0.25f * t));
-        // Return garuntees wave stays within the -1-1 range
+    public static Vector3 DoubleWave(float u, float v, float t) {
+        Vector3 outPoint;
+        outPoint.x = u;
+        outPoint.y = Sin(PI * (x + t * 0.5f));
+        outPoint.y += 0.5f * Sin(2f * PI * (z + t));
+        outPoint.y += Sin(PI * (x + z + 0.25f * t));
+        // Garuntees wave stays within the -1-1 range
         // Also note using multiplication of constant fractional values over division for performance
-        return y * (1f / 2.5f);
+        outPoint.y *= (1f / 2.5f);
+        outPoint.z = v;
+        return outPoint;
     }
 
-    public static float Ripple (float x, float z, float t) {
+    public static Vector3 Ripple (float u, float v, float t) {
         float distFromCent = Sqrt(x * x + z * z);
-        float y = Sin(PI * (4f * distFromCent - t)) / (1f + 10f * distFromCent);
-        return y;
+        Vector3 outPoint;
+        outPoint.x = u;
+        outPoint.y = Sin(PI * (4f * distFromCent - t)) / (1f + 10f * distFromCent);
+        outPoint.z = v;
+        return outPoint;
     }
 
 }
