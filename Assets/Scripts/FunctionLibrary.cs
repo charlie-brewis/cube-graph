@@ -29,7 +29,7 @@ public static class FunctionLibrary {
         Vector3 outPoint;
         outPoint.x = u;
         outPoint.y = Sin(PI * (u + t * 0.5f));
-        outPoint.y += 0.5f * Sin(2f * PI * (z + t));
+        outPoint.y += 0.5f * Sin(2f * PI * (v + t));
         outPoint.y += Sin(PI * (u + v + 0.25f * t));
         // Garuntees wave stays within the -1-1 range
         // Also note using multiplication of constant fractional values over division for performance
@@ -48,10 +48,11 @@ public static class FunctionLibrary {
     }
 
     public static Vector3 Sphere (float u, float v, float t) {
+        float radius = Cos(0.5f * PI * v);
         Vector3 outPoint;
-        outPoint.x = 0f;
-        outPoint.y = 0f;
-        outPoint.z = PI * v * v;
+        outPoint.x = radius * Sin(PI * u);
+        outPoint.y = Sin(PI * 0.5f * v);
+        outPoint.z = radius * Cos(PI * u);
         return outPoint;
     } 
 

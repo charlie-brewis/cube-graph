@@ -31,7 +31,7 @@ public class Graph : MonoBehaviour {
         // Objects like arrays must be initialized. Here we initialize a size of resolution squared to fill the x and z coordinates
         points = new Transform[resolution * resolution];
 
-        for (int i = 0, x = 0, z = 0; i < points.Length; i++, x++) {
+        for (int i = 0; i < points.Length; i++) {
             // C# can tell this is inside a loop and so this definition is allowed
             Transform point = Instantiate(pointPrefab);
             // Adding the point to the array of points
