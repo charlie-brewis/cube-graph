@@ -25,20 +25,26 @@ public class Graph : MonoBehaviour {
         // point.localPosition = Vector3.right * 2f;
 
         // defines the space between points to keep graph within the domain -1-1
-        float xStep = 2f / resolution;
-        var scale = Vector3.one * xStep;
+        float step = 2f / resolution;
+        var scale = Vector3.one * step;
         // Initialise the position as (0, 0, 0)
         var position = Vector3.zero;
 
-        // Objects like arrays must be initialized
-        points = new Transform[resolution];
+        // Objects like arrays must be initialized. Here we initialize a size of resolution squared to fill the x and z coordinates
+        points = new Transform[resolution * resolution];
 
-        for (int i = 0; i < points.Length; i++) {
+        for (int i = 0, x = 0, z = 0; i < points.Length; i++, x++) {
+            // Reset x at the end of each row
+            if (x == resolution) {
+                x = 0;
+                z++;    
+            }
             // C# can tell this is inside a loop and so this definition is allowed
             Transform point = Instantiate(pointPrefab);
             // Adding the point to the array of points
             points[i] = point;
-            position.x = (i + 0.5f) * xStep - 1f;
+            position.x = (x + 0.5f) * step - 1f;
+            position.z = (z + 0.5f) * step - 1f;            
 
             point.localPosition = position;
             // rescales the points to fit within -1-1 range
@@ -55,7 +61,7 @@ public class Graph : MonoBehaviour {
         for (int i = 0; i < points.Length; i++) {
             Transform point = points[i];
             Vector3 position = point.localPosition;
-            position.y = func(position.x, time);
+            position.y = func(position.x, position.z, time);
             point.localPosition = position;
         }
     }
