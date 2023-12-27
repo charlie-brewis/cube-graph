@@ -9,8 +9,8 @@ public static class FunctionLibrary {
 
     // Enum FunctionName type defines the valid names allowed within functions
     // I.e., FunctionName is the key to functions value - Treated as strings
-    public enum FunctionName {Wave, DoubleWave, Ripple}
-    static Function[] functions = {Wave, DoubleWave, Ripple};
+    public enum FunctionName {Wave, DoubleWave, Ripple, Sphere}
+    static Function[] functions = {Wave, DoubleWave, Ripple, Sphere};
 
     public static Function GetFunction (FunctionName name) {
         return functions[(int)name];
@@ -20,7 +20,7 @@ public static class FunctionLibrary {
     public static Vector3 Wave(float u, float v, float t) {
         Vector3 outPoint;
         outPoint.x = u;
-        outPoint.y = Sin(PI * (x + z + t));
+        outPoint.y = Sin(PI * (u + v + t));
         outPoint.z = v;
         return outPoint;
     }
@@ -28,9 +28,9 @@ public static class FunctionLibrary {
     public static Vector3 DoubleWave(float u, float v, float t) {
         Vector3 outPoint;
         outPoint.x = u;
-        outPoint.y = Sin(PI * (x + t * 0.5f));
+        outPoint.y = Sin(PI * (u + t * 0.5f));
         outPoint.y += 0.5f * Sin(2f * PI * (z + t));
-        outPoint.y += Sin(PI * (x + z + 0.25f * t));
+        outPoint.y += Sin(PI * (u + v + 0.25f * t));
         // Garuntees wave stays within the -1-1 range
         // Also note using multiplication of constant fractional values over division for performance
         outPoint.y *= (1f / 2.5f);
@@ -39,12 +39,20 @@ public static class FunctionLibrary {
     }
 
     public static Vector3 Ripple (float u, float v, float t) {
-        float distFromCent = Sqrt(x * x + z * z);
+        float distFromCent = Sqrt(u * u + v * v);
         Vector3 outPoint;
         outPoint.x = u;
         outPoint.y = Sin(PI * (4f * distFromCent - t)) / (1f + 10f * distFromCent);
         outPoint.z = v;
         return outPoint;
     }
+
+    public static Vector3 Sphere (float u, float v, float t) {
+        Vector3 outPoint;
+        outPoint.x = 0f;
+        outPoint.y = 0f;
+        outPoint.z = PI * v * v;
+        return outPoint;
+    } 
 
 }

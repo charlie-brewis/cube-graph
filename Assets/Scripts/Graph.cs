@@ -56,7 +56,7 @@ public class Graph : MonoBehaviour {
                 v = (z + 0.5f) * step - 1f;  
             } 
             float u = (x + 0.5f) * step - 1f;
-            points[i].localPosition = func(u, v, time)
+            points[i].localPosition = func(u, v, time);
         }
 
     }
