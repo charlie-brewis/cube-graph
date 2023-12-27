@@ -18,20 +18,21 @@ public static class FunctionLibrary {
 
     // f(x, t) = sin(pi(x + t))
     public static float Wave(float x, float z, float t) {
-        return Sin(PI * (x + t));
+        return Sin(PI * (x + z + t));
     }
 
     public static float DoubleWave(float x, float z, float t) {
         float y = Sin(PI * (x + t * 0.5f));
-        y += Sin(2f * PI * (x + t)) * 0.5f;
+        y += 0.5f * Sin(2f * PI * (z + t));
+        y += Sin(PI * (x + z + 0.25f * t));
         // Return garuntees wave stays within the -1-1 range
         // Also note using multiplication of constant fractional values over division for performance
-        return y * (2f / 3f);
+        return y * (1f / 2.5f);
     }
 
     public static float Ripple (float x, float z, float t) {
-        float distFromXCent = Abs(x);
-        float y = Sin(PI * (4f * distFromXCent - t)) / (1f + 10f * distFromXCent);
+        float distFromCent = Sqrt(x * x + z * z);
+        float y = Sin(PI * (4f * distFromCent - t)) / (1f + 10f * distFromCent);
         return y;
     }
 
