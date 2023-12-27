@@ -134,8 +134,8 @@
     ],
     "m_VertexContext": {
         "m_Position": {
-            "x": 9.0,
-            "y": 90.0
+            "x": -2.0,
+            "y": -36.0
         },
         "m_Blocks": [
             {
@@ -208,8 +208,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -656.0,
-            "y": 198.0,
+            "x": -660.0,
+            "y": 196.0,
             "width": 206.0,
             "height": 131.0
         }
@@ -328,7 +328,7 @@
     "m_Value": {
         "x": 0.5,
         "y": 0.5,
-        "z": 0.0,
+        "z": 0.5,
         "w": 0.0
     },
     "m_DefaultValue": {
@@ -716,8 +716,8 @@
         "m_Expanded": false,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -281.0,
-            "y": 198.0,
+            "x": -279.0,
+            "y": 197.0,
             "width": 130.0,
             "height": 94.0
         }
@@ -1205,7 +1205,7 @@
     "m_Value": {
         "e00": 0.5,
         "e01": 0.5,
-        "e02": 0.0,
+        "e02": 0.5,
         "e03": 2.0,
         "e10": 2.0,
         "e11": 2.0,
