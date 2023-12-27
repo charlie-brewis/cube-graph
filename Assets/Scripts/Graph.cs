@@ -9,8 +9,8 @@ public class Graph : MonoBehaviour {
     [SerializeField, Range(10, 100)]
     int resolution = 10;
 
-    [SerializeField, Range(0, 2)]
-    int functionIndex = 0;
+    [SerializeField]    
+    FunctionLibrary.FunctionName functionKey;
 
     // Type transform is the position, rotation, and scale of the game object
     Transform[] points;
@@ -51,7 +51,7 @@ public class Graph : MonoBehaviour {
 
     void Update() {
         float time = Time.time;
-        FunctionLibrary.Function func = FunctionLibrary.GetFunction(functionIndex);
+        FunctionLibrary.Function func = FunctionLibrary.GetFunction(functionKey);
         for (int i = 0; i < points.Length; i++) {
             Transform point = points[i];
             Vector3 position = point.localPosition;

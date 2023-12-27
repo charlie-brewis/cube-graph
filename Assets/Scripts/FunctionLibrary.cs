@@ -7,16 +7,13 @@ public static class FunctionLibrary {
     // This is essentially an abstract method to define a shape/type (Function) for all our wave functions
     public delegate float Function (float x, float y);
 
-    public static Function GetFunction (int index) {
-        if (index == 0) {
-            return Wave;
-        } 
-        else if (index == 1) {
-            return DoubleWave;
-        } 
-        else {
-            return Ripple;
-        }
+    // Enum FunctionName type defines the valid names allowed within functions
+    // I.e., FunctionName is the key to functions value - Treated as strings
+    public enum FunctionName {Wave, DoubleWave, Ripple}
+    static Function[] functions = {Wave, DoubleWave, Ripple};
+
+    public static Function GetFunction (FunctionName name) {
+        return functions[(int)name];
     }
 
     // f(x, t) = sin(pi(x + t))
