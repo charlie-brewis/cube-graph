@@ -27,7 +27,7 @@ public class Graph : MonoBehaviour {
         // point.localPosition = Vector3.right * 2f;
 
         // defines the space between points to keep graph within the domain -1-1
-        resolution = DEFAULT_RESOLUTION;
+        // resolution = DEFAULT_RESOLUTION;
         float step = 2f / resolution;
         var scale = Vector3.one * step;
 
