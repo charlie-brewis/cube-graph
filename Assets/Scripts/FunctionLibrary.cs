@@ -9,8 +9,8 @@ public static class FunctionLibrary {
 
     // Enum FunctionName type defines the valid names allowed within functions
     // I.e., FunctionName is the key to functions value - Treated as strings
-    public enum FunctionName {Wave, DoubleWave, Ripple, Sphere}
-    static Function[] functions = {Wave, DoubleWave, Ripple, Sphere};
+    public enum FunctionName {Wave, DoubleWave, Ripple, Sphere, Torus}
+    static Function[] functions = {Wave, DoubleWave, Ripple, Sphere, Torus};
 
     public static Function GetFunction (FunctionName name) {
         return functions[(int)name];
@@ -54,7 +54,9 @@ public static class FunctionLibrary {
         // Verical Bands
         // float r = 0.9f + .1f * Sin(8f * PI * u);
         // Horizontal Bands
-        float r = 0.9f + .1f * Sin(8f * PI * v);
+        // float r = 0.9f + .1f * Sin(8f * PI * v);
+        // Twisting Bands (both)
+        float r = .9f + .1f * Sin(PI * (6f * u + 4f * v + t));
         float s = r * Cos(0.5f * PI * v);
 
         Vector3 outPoint;
@@ -63,5 +65,19 @@ public static class FunctionLibrary {
         outPoint.z = s * Cos(PI * u);
         return outPoint;
     } 
+
+    public static Vector3 Torus(float u, float v, float t) {
+        // float torusRadius = .75f;
+        // float ringRadius = .25f;
+        float torusRadius = .7f + .1f * Sin(PI * (6f * u + .5f * t));
+        float ringRadius = .15f + .05f * Sin(PI * (8f * u + 4f * v + 2f * t));
+        float s = torusRadius + ringRadius * Cos(PI * v);
+
+        Vector3 outPoint;
+        outPoint.x = s * Sin(PI * u);
+        outPoint.y = ringRadius * Sin(PI * v);
+        outPoint.z = s * Cos(PI * u);
+        return outPoint;
+    }
 
 }
