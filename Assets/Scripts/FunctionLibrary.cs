@@ -47,12 +47,20 @@ public static class FunctionLibrary {
         return outPoint;
     }
 
+    // Think of this sphere as multiple semi-circles rotated around the y-axis
     public static Vector3 Sphere (float u, float v, float t) {
-        float radius = Cos(0.5f * PI * v);
+        // Scale r by time
+        // float r = 0.5f + 0.5f * Sin(PI * t);
+        // Verical Bands
+        // float r = 0.9f + .1f * Sin(8f * PI * u);
+        // Horizontal Bands
+        float r = 0.9f + .1f * Sin(8f * PI * v);
+        float s = r * Cos(0.5f * PI * v);
+
         Vector3 outPoint;
-        outPoint.x = radius * Sin(PI * u);
-        outPoint.y = Sin(PI * 0.5f * v);
-        outPoint.z = radius * Cos(PI * u);
+        outPoint.x = s * Sin(PI * u);
+        outPoint.y = r * Sin(PI * 0.5f * v);
+        outPoint.z = s * Cos(PI * u);
         return outPoint;
     } 
 

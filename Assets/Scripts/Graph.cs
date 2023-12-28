@@ -7,7 +7,9 @@ public class Graph : MonoBehaviour {
 
     // Range defines the range of values the field can take
     [SerializeField, Range(10, 100)]
-    int resolution = 10;
+    int resolution;
+
+    const int DEFAULT_RESOLUTION = 100;
 
     [SerializeField]    
     FunctionLibrary.FunctionName functionKey;
@@ -25,6 +27,7 @@ public class Graph : MonoBehaviour {
         // point.localPosition = Vector3.right * 2f;
 
         // defines the space between points to keep graph within the domain -1-1
+        resolution = DEFAULT_RESOLUTION;
         float step = 2f / resolution;
         var scale = Vector3.one * step;
 
@@ -32,10 +35,8 @@ public class Graph : MonoBehaviour {
         points = new Transform[resolution * resolution];
 
         for (int i = 0; i < points.Length; i++) {
-            // C# can tell this is inside a loop and so this definition is allowed
-            Transform point = Instantiate(pointPrefab);
-            // Adding the point to the array of points
-            points[i] = point;
+            // C# can tell this is inside a loop and so this definition is allowed, also adds to index at points
+            Transform point = points[i] = Instantiate(pointPrefab);
             // rescales the points to fit within -1-1 range
             point.localScale = scale;
             //! I dont know what this is
@@ -47,11 +48,12 @@ public class Graph : MonoBehaviour {
         FunctionLibrary.Function func = FunctionLibrary.GetFunction(functionKey);
         float time = Time.time;
         float step = 2f / resolution;
+        //! Problem when drawing z = v as it relies on resolution incorrectly somewhere
         float v = 0.5f * step - 1f;
         for (int i = 0, x = 0, z = 0; i < points.Length; i++, x++) {
             if (x == resolution) {
                 x = 0;
-                z++; 
+                z += 1; 
                 // v only needs to be recalculated when z changes, therefore it is defined here
                 v = (z + 0.5f) * step - 1f;  
             } 
