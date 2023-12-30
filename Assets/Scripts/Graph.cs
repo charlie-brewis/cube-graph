@@ -14,6 +14,10 @@ public class Graph : MonoBehaviour {
     [SerializeField]    
     FunctionLibrary.FunctionName functionKey;
 
+    public enum TransitionMode { Cycle, Random }
+    [SerializeField]
+    TransitionMode transitionMode;
+
     [SerializeField, Min(0f)]
     float functionDuration = 1f;
 
@@ -54,9 +58,15 @@ public class Graph : MonoBehaviour {
         if (currDuration >= functionDuration) {
             // Sub rather than reset to keep timing consistent even when desynced
             currDuration -= functionDuration;
-            functionKey = FunctionLibrary.GetNextFunctionName(functionKey);
+            PickNextFunction();
         }
         UpdateFunction();
+    }
+
+    void PickNextFunction() {
+        functionKey = transitionMode == TransitionMode.Cycle ?
+            FunctionLibrary.GetNextFunctionName(functionKey) :
+            FunctionLibrary.GetRandomFunctionNameOtherThan(functionKey);
     }
 
     void UpdateFunction() {
