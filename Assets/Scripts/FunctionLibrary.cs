@@ -25,6 +25,11 @@ public static class FunctionLibrary {
         return choice == name ? 0 : choice;
     }
 
+    public static Vector3 Morph (float u, float v, float t, Function from, Function to, float progress) {
+        // Lerp is short for linear interpolation - it finds an inbetween value between the start and end points
+        return Vector3.LerpUnclamped(from(u, v, t), to(u, v, t), SmoothStep(0, 1, progress));
+    }
+
     // f(x, t) = sin(pi(x + t))
     public static Vector3 Wave(float u, float v, float t) {
         Vector3 outPoint;

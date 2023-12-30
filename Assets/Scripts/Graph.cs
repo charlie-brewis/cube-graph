@@ -19,12 +19,15 @@ public class Graph : MonoBehaviour {
     TransitionMode transitionMode;
 
     [SerializeField, Min(0f)]
-    float functionDuration = 1f;
+    float functionDuration = 1f, transitionDuration = 1f;
 
     // Type transform is the position, rotation, and scale of the game object
     Transform[] points;
 
     float currDuration;
+
+    bool transitioning;
+    FunctionLibrary.FunctionName transitionFunctionFrom;
 
     void Awake() { 
         // Transform point = Instantiate(pointPrefab);
@@ -55,12 +58,25 @@ public class Graph : MonoBehaviour {
 
     void Update() {
         currDuration += Time.deltaTime;
-        if (currDuration >= functionDuration) {
+        if (transitioning) {
+            if (currDuration >= transitionDuration) {
+                currDuration -= transitionDuration;
+                transitioning = false;
+            }
+        }
+        else if (currDuration >= functionDuration) {
             // Sub rather than reset to keep timing consistent even when desynced
             currDuration -= functionDuration;
+            transitioning = true;
+            transitionFunctionFrom = functionKey;
             PickNextFunction();
         }
-        UpdateFunction();
+        if (transitioning) {
+            UpdateFunctionTransition();
+        }
+        else {
+            UpdateFunction();
+        }
     }
 
     void PickNextFunction() {
@@ -84,6 +100,26 @@ public class Graph : MonoBehaviour {
             } 
             float u = (x + 0.5f) * step - 1f;
             points[i].localPosition = func(u, v, time);
+        }
+    }
+
+    void UpdateFunctionTransition() {
+        FunctionLibrary.Function 
+            from = FunctionLibrary.GetFunction(transitionFunctionFrom),
+            to = FunctionLibrary.GetFunction(functionKey);
+
+        float progress = currDuration / transitionDuration;
+        float time = Time.time;
+        float step = 2f / resolution;
+        float v = 0.5f * step - 1f;
+        for (int i = 0, x = 0, z = 0; i < points.Length; i++, x++) {
+            if (x == resolution) {
+                x = 0;
+                z += 1; 
+                v = (z + 0.5f) * step - 1f;  
+            } 
+            float u = (x + 0.5f) * step - 1f;
+            points[i].localPosition = FunctionLibrary.Morph(u, v, time, from, to, progress);
         }
     }
 }

@@ -512,6 +512,9 @@ MonoBehaviour:
   pointPrefab: {fileID: 4368198180559666929, guid: 288a948321b935c42aa2de6020c2c66b, type: 3}
   resolution: 100
   functionKey: 0
+  transitionMode: 1
+  functionDuration: 5
+  transitionDuration: 1
 --- !u!4 &1391948120
 Transform:
   m_ObjectHideFlags: 0
@@ -578,6 +581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   display: {fileID: 1403657459}
+  displayMode: 0
   sampleDuration: 1
 --- !u!114 &1403657459
 MonoBehaviour:
