@@ -14,8 +14,13 @@ public class Graph : MonoBehaviour {
     [SerializeField]    
     FunctionLibrary.FunctionName functionKey;
 
+    [SerializeField, Min(0f)]
+    float functionDuration = 1f;
+
     // Type transform is the position, rotation, and scale of the game object
     Transform[] points;
+
+    float currDuration;
 
     void Awake() { 
         // Transform point = Instantiate(pointPrefab);
@@ -45,6 +50,16 @@ public class Graph : MonoBehaviour {
     }
 
     void Update() {
+        currDuration += Time.deltaTime;
+        if (currDuration >= functionDuration) {
+            // Sub rather than reset to keep timing consistent even when desynced
+            currDuration -= functionDuration;
+            functionKey = FunctionLibrary.GetNextFunctionName(functionKey);
+        }
+        UpdateFunction();
+    }
+
+    void UpdateFunction() {
         FunctionLibrary.Function func = FunctionLibrary.GetFunction(functionKey);
         float time = Time.time;
         float step = 2f / resolution;
@@ -60,6 +75,5 @@ public class Graph : MonoBehaviour {
             float u = (x + 0.5f) * step - 1f;
             points[i].localPosition = func(u, v, time);
         }
-
     }
 }
