@@ -6,7 +6,7 @@ public class Graph : MonoBehaviour {
     Transform pointPrefab;
 
     // Range defines the range of values the field can take
-    [SerializeField, Range(10, 100)]
+    [SerializeField, Range(10, 200)]
     int resolution;
 
     const int DEFAULT_RESOLUTION = 100;
