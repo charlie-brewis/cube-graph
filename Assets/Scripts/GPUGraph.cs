@@ -1,9 +1,16 @@
 using UnityEngine;
 
 public class GPUGraph : MonoBehaviour {
-    
+
     [SerializeField]
     ComputeShader computeShader;
+
+    static readonly int 
+        positionsId = Shader.PropertyToID("_Positions"),
+        resolutionId = Shader.PropertyToID("_Resolution"),
+        stepId = Shader.PropertyToID("_Step"),
+        timeId = Shader.PropertyToID("_Time");
+
 
     [SerializeField, Range(10, 200)]
     int resolution;
@@ -53,11 +60,29 @@ public class GPUGraph : MonoBehaviour {
             transitioning = true;
             transitionFunctionFrom = functionKey;
             PickNextFunction();
-        } }
+        } 
+        
+        UpdateFunctionOnGPU();
+    }
 
     void PickNextFunction() {
         functionKey = transitionMode == TransitionMode.Cycle ?
             FunctionLibrary.GetNextFunctionName(functionKey) :
             FunctionLibrary.GetRandomFunctionNameOtherThan(functionKey); }
+
+    void UpdateFunctionOnGPU() {
+        float step = 2f / resolution;
+        computeShader.SetInt(resolutionId, resolution);
+        computeShader.SetFloat(stepId, step);
+        computeShader.SetFloat(timeId, Time.time);
+
+        // the 0 is the index of our kernel as compute shaders can have multiple kernels
+        computeShader.SetBuffer(0, positionsId, positionsBuffer);
+
+        // This runs our kernel, again the first param is the kernel index while the other 3 is the amount of groups to run split into dimensions
+        // Our group size is fixed to 8*8, we need 8 / resolution groups in the xy dimensions, rounded up
+        int groups = Mathf.CeilToInt(resolution / 8f);
+        computeShader.Dispatch(0, groups, groups, 1);
+    }
 
 }

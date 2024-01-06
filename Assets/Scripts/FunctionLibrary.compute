@@ -35,7 +35,7 @@ void SetPosition (uint3 id, float3 position) {
 // Defines the number of threads this function has
 // This defines the threads in a 8 * 8 * 1 grid
 // We have chosen to do it this way as the points we are inputting are 2D and 64 is a standard warp size for GPUs
-[numThreads(8, 8, 1)]
+[numthreads(8, 8, 1)]
 // Each thread is defined by a vector of 3 unsigned integers
 void FunctionKernel (uint3 id: SV_DispatchThreadID) {
     float2 uv = GetUV(id);
