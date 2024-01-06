@@ -1,0 +1,43 @@
+// This acts as a main function
+#pragma kernel FunctionKernel
+#define PI 3.14159265358979323846
+
+// A read-write compute buffer to store our vertex positions, note we also specify the type of each datum
+RWStructuredBuffer<float3> _Positions;
+
+uint _Resolution;
+
+float _Step, _Time;
+
+
+float3 Wave(float u, float v, float t) {
+        float3 outPoint;
+        outPoint.x = u;
+        outPoint.y = sin(PI * (u + v + t));
+        outPoint.z = v;
+        return outPoint;
+    }
+
+float2 GetUV (uint3 id) {
+    // Converts the 3D threadID to the point's 2D UV coordinates
+    return (id.xy + 0.5) * _Step - 1.0;
+}
+
+void SetPosition (uint3 id, float3 position) {
+    // Stores the 2D data sequentially in a 1D array
+    // https://catlikecoding.com/unity/tutorials/basics/compute-shaders/moving-work-to-the-gpu/3x3-grid-indices.png
+    // If avoids indecies falling out of bounds if the resolution is not a multiple of 8 - due to extra row and column
+    if (id.x < _Resolution && id.y < _Resolution) {
+        _Positions[id.x + id.y * _Resolution] = position;
+    }
+}
+
+// Defines the number of threads this function has
+// This defines the threads in a 8 * 8 * 1 grid
+// We have chosen to do it this way as the points we are inputting are 2D and 64 is a standard warp size for GPUs
+[numThreads(8, 8, 1)]
+// Each thread is defined by a vector of 3 unsigned integers
+void FunctionKernel (uint3 id: SV_DispatchThreadID) {
+    float2 uv = GetUV(id);
+    SetPosition(id, Wave(uv.x, uv.y, _Time));
+}
