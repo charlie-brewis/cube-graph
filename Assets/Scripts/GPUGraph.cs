@@ -86,6 +86,10 @@ public class GPUGraph : MonoBehaviour {
         int groups = Mathf.CeilToInt(resolution / 8f);
         computeShader.Dispatch(0, groups, groups, 1);
 
+        // Define the attributes in the material
+        material.SetBuffer(positionsId, positionsBuffer);
+        material.SetFloat(stepId, step);
+
         // the 0 is the sub-mesh index for when a mesh has multiple parts
         // Bounds lets Unity know the location of the object being rendered - in our case we are bounding the entire graph rather than a single point
         // This is what allows fulcrum culling on the GPU side 
