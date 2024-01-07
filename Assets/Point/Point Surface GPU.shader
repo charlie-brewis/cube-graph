@@ -10,36 +10,18 @@ Shader "Graph/Point Surface GPU" {
         #pragma surface ConfigureSurface Standard fullforwardshadows addshadow
         // Indicates that the shader has to invoke a ConfigureProcedural per vertex, and that all scaling will be uniform
         #pragma instancing_options assumeuniformscaling  procedural:ConfigureProcedural
+        // forces the editor to buffer and compile this shader ahead of time asynchronously, instead of using a default shader while rendering
+        #pragma editor_sync_compilation
         // Sets a minimum for the shaders target level and quality
         #pragma target 4.5
+
+        #include "PointGPU.hlsl"
 
         struct Input {
             float3 worldPos;
         };
 
         float _Smoothness;
-
-        // Only do this for shader variants specifically compiled for procedural drawing
-        #if defined(UNITY_PROCEDURAL_INSTANCING_ENABLED)
-        // This one is of type StructuredBuffer as we only have to read from it
-        StructuredBuffer<float3> _Positions;
-        #endif
-
-        float _Step;
-
-        void ConfigureProcedural () {
-            #if defined(UNITY_PROCEDURAL_INSTANCING_ENABLED)
-            // Get the position at the index currently being drawn
-            float3 position = _Positions[unity_InstanceID];
-            // Insitialises a 4x4 object-world transformation matrix with all values set to 0
-            // https://catlikecoding.com/unity/tutorials/basics/compute-shaders/procedural-drawing/transformation-matrix.png
-            unity_ObjectToWorld = 0.0;
-            // Assigns position column values to the position 
-            unity_ObjectToWorld._m03_m13_m23_m33 = float4(position, 1.0);
-            // Assigns the scale cells to step
-            unity_ObjectToWorld._m00_m11_m22 = _Step;
-            #endif
-        }
 
         // inout indicates the parameter is passed to the function and used in the output
         void ConfigureSurface (Input input, inout SurfaceOutputStandard surface) {

@@ -16,7 +16,7 @@ public class GPUGraph : MonoBehaviour {
     Mesh mesh;
 
 
-    [SerializeField, Range(10, 200)]
+    [SerializeField, Range(10, 1000)]
     int resolution;
     const int DEFAULT_RESOLUTION = 100;
 
