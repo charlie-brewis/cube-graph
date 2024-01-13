@@ -78,13 +78,15 @@ public class GPUGraph : MonoBehaviour {
         computeShader.SetFloat(stepId, step);
         computeShader.SetFloat(timeId, Time.time);
 
+        var kernelFunctionIndex = (int)functionKey;
+
         // the 0 is the index of our kernel as compute shaders can have multiple kernels
-        computeShader.SetBuffer(0, positionsId, positionsBuffer);
+        computeShader.SetBuffer(kernelFunctionIndex, positionsId, positionsBuffer);
 
         // This runs our kernel, again the first param is the kernel index while the other 3 is the amount of groups to run split into dimensions
         // Our group size is fixed to 8*8, we need 8 / resolution groups in the xy dimensions, rounded up
         int groups = Mathf.CeilToInt(resolution / 8f);
-        computeShader.Dispatch(0, groups, groups, 1);
+        computeShader.Dispatch(kernelFunctionIndex, groups, groups, 1);
 
         // Define the attributes in the material
         material.SetBuffer(positionsId, positionsBuffer);

@@ -1,5 +1,10 @@
-// This acts as a main function
-#pragma kernel FunctionKernel
+// These are the functions that can be returned by this script
+#pragma kernel WaveKernel
+#pragma kernel DoubleWaveKernel
+#pragma kernel RippleKernel
+#pragma kernel SphereKernel
+#pragma kernel TorusKernel
+
 #define PI 3.14159265358979323846
 
 // A read-write compute buffer to store our vertex positions, note we also specify the type of each datum
@@ -18,6 +23,52 @@ float3 Wave(float u, float v, float t) {
         return outPoint;
     }
 
+float3 DoubleWave(float u, float v, float t) {
+        float3 outPoint;
+        outPoint.x = u;
+        outPoint.y = sin(PI * (u + t * 0.5));
+        outPoint.y += 0.5 * sin(2.0 * PI * (v + t));
+        outPoint.y += sin(PI * (u + v + 0.25 * t));
+        outPoint.y *= (1.0 / 2.5);
+        outPoint.z = v;
+        return outPoint;
+    }
+
+float3 Ripple (float u, float v, float t) {
+    float distFromCent = sqrt(u * u + v * v);
+    float3 outPoint;
+    outPoint.x = u;
+    outPoint.y = sin(PI * (4.0 * distFromCent - t)) / (1.0 + 10.0 * distFromCent);
+    outPoint.z = v;
+    return outPoint;
+}
+
+
+float3 Sphere (float u, float v, float t) {
+    float r = .9 + .1 * sin(PI * (6.0 * u + 4.0 * v + t));
+    float s = r * cos(0.5 * PI * v);
+
+    float3 outPoint;
+    outPoint.x = s * sin(PI * u);
+    outPoint.y = r * sin(PI * 0.5 * v);
+    outPoint.z = s * cos(PI * u);
+    return outPoint;
+} 
+
+float3 Torus(float u, float v, float t) {
+    float torusRadius = .7 + .1 * sin(PI * (6.0 * u + .5 * t));
+    float ringRadius = .15 + .05 * sin(PI * (8.0 * u + 4.0 * v + 2.0 * t));
+    float s = torusRadius + ringRadius * cos(PI * v);
+
+    float3 outPoint;
+    outPoint.x = s * sin(PI * u);
+    outPoint.y = ringRadius * sin(PI * v);
+    outPoint.z = s * cos(PI * u);
+    return outPoint;
+}
+
+
+
 float2 GetUV (uint3 id) {
     // Converts the 3D threadID to the point's 2D UV coordinates
     return (id.xy + 0.5) * _Step - 1.0;
@@ -32,12 +83,22 @@ void SetPosition (uint3 id, float3 position) {
     }
 }
 
-// Defines the number of threads this function has
-// This defines the threads in a 8 * 8 * 1 grid
-// We have chosen to do it this way as the points we are inputting are 2D and 64 is a standard warp size for GPUs
-[numthreads(8, 8, 1)]
-// Each thread is defined by a vector of 3 unsigned integers
-void FunctionKernel (uint3 id: SV_DispatchThreadID) {
-    float2 uv = GetUV(id);
-    SetPosition(id, Wave(uv.x, uv.y, _Time));
-}
+// KERNAL_FUNCTION(function) defines a macro for any input function to be used within the kernel function
+// [numthreads(8, 8, 1)] defines the number of threads this function has 
+//     This defines the threads in a 8 * 8 * 1 grid 
+//     We have chosen to do it this way as the points we are inputting are 2D and 64 is a standard warp size for GPUs 
+// uint3 for id as each thread is defined by a vector of 3 unsigned integers 
+// ## works as a concatination operator 
+#define KERNEL_FUNCTION(function) \
+    [numthreads(8, 8, 1)] \
+    void function##Kernel (uint3 id: SV_DispatchThreadID) { \
+        float2 uv = GetUV(id); \
+        SetPosition(id, function(uv.x, uv.y, _Time)); \
+    }
+
+// All 6 kernel functions can now be defined by invoking the KERNEL_FUNCTION macro defined above
+KERNEL_FUNCTION(Wave)
+KERNEL_FUNCTION(DoubleWave)
+KERNEL_FUNCTION(Ripple)
+KERNEL_FUNCTION(Sphere)
+KERNEL_FUNCTION(Torus)

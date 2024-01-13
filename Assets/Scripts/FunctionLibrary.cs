@@ -9,8 +9,8 @@ public static class FunctionLibrary {
 
     // Enum FunctionName type defines the valid names allowed within functions
     // I.e., FunctionName is the key to functions value - Treated as strings
-    public enum FunctionName {Wave, DoubleWave, Ripple, Sphere, Torus, FuzzyWave}
-    static Function[] functions = {Wave, DoubleWave, Ripple, Sphere, Torus, FuzzyWave};
+    public enum FunctionName {Wave, DoubleWave, Ripple, Sphere, Torus}
+    static Function[] functions = {Wave, DoubleWave, Ripple, Sphere, Torus};
 
     public static Function GetFunction (FunctionName name) {
         return functions[(int)name];
@@ -94,19 +94,19 @@ public static class FunctionLibrary {
         return outPoint;
     }
 
-    public static Vector3 FuzzyWave(float u, float v, float t) {
-        // int waveCount = 5;
-        // Random rand = new Random();
-        Vector3 outPoint;
-        outPoint.x = u; 
-        outPoint.z = v;
-        // outPoint.y = 0;
-        // for (int i = 0; i < waveCount; i++){
-        //     outPoint.y += Sin(PI * (u + t * Random.Range(0f, 1f))) * Random.Range(0f, 1f);
-        // }
-        outPoint.y = Sin(PI * (u + t )) * Random.Range(.5f, 1f) + Random.Range(.5f, 1f);
+    // public static Vector3 FuzzyWave(float u, float v, float t) {
+    //     // int waveCount = 5;
+    //     // Random rand = new Random();
+    //     Vector3 outPoint;
+    //     outPoint.x = u; 
+    //     outPoint.z = v;
+    //     // outPoint.y = 0;
+    //     // for (int i = 0; i < waveCount; i++){
+    //     //     outPoint.y += Sin(PI * (u + t * Random.Range(0f, 1f))) * Random.Range(0f, 1f);
+    //     // }
+    //     outPoint.y = Sin(PI * (u + t )) * Random.Range(.5f, 1f) + Random.Range(.5f, 1f);
 
-        return outPoint;
-    }
+    //     return outPoint;
+    // }
 
 }
