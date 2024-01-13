@@ -15,8 +15,8 @@ public class GPUGraph : MonoBehaviour {
     [SerializeField]
     Mesh mesh;
 
-
-    [SerializeField, Range(10, 1000)]
+    const int maxResolution = 1000;
+    [SerializeField, Range(10, maxResolution)]
     int resolution;
     const int DEFAULT_RESOLUTION = 100;
 
@@ -41,7 +41,7 @@ public class GPUGraph : MonoBehaviour {
     void OnEnable() {
         // Constructor method of the compute buffer
         // param 2 is the size of each datum to be stored, we are storing Vector3 objects which are sets of 3 floats (floats are 4 bytes)
-        positionsBuffer = new ComputeBuffer(resolution * resolution, 3 * 4);
+        positionsBuffer = new ComputeBuffer(maxResolution * maxResolution, 3 * 4);
     }
 
     void OnDisable() {
@@ -95,7 +95,7 @@ public class GPUGraph : MonoBehaviour {
         // This is what allows fulcrum culling on the GPU side 
         // The last parameter tells us how many instances should be drawn, which in our case is the number of elements in the positions buffer
         var bounds = new Bounds(Vector3.zero, Vector3.one * (2f + 2f / resolution));
-        Graphics.DrawMeshInstancedProcedural(mesh, 0, material, bounds, positionsBuffer.count);
+        Graphics.DrawMeshInstancedProcedural(mesh, 0, material, bounds, resolution * resolution);
     }
 
 }
