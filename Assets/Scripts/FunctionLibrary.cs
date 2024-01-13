@@ -12,13 +12,12 @@ public static class FunctionLibrary {
     public enum FunctionName {Wave, DoubleWave, Ripple, Sphere, Torus}
     static Function[] functions = {Wave, DoubleWave, Ripple, Sphere, Torus};
 
-    public static Function GetFunction (FunctionName name) {
-        return functions[(int)name];
-    }
+    // As there is no set function we can write our get function using inline notation without the get keyword
+    public static int FunctionCount => functions.Length;
 
-    public static FunctionName GetNextFunctionName (FunctionName name) {
-        return (int)name < functions.Length - 1 ? ++name : 0;
-    }
+    public static Function GetFunction (FunctionName name) => functions[(int)name];
+
+    public static FunctionName GetNextFunctionName (FunctionName name) => (int)name < functions.Length - 1 ? ++name : 0;
 
     public static FunctionName GetRandomFunctionNameOtherThan (FunctionName name) {
         var choice = (FunctionName)Random.Range(1, functions.Length);
@@ -70,7 +69,7 @@ public static class FunctionLibrary {
         // Horizontal Bands
         // float r = 0.9f + .1f * Sin(8f * PI * v);
         // Twisting Bands (both)
-        float r = .9f + .1f * Sin(PI * (6f * u + 4f * v + t));
+        float r = .9f + .1f * Sin(PI * (12f * u + 8f * v + t));
         float s = r * Cos(0.5f * PI * v);
 
         Vector3 outPoint;
@@ -83,8 +82,8 @@ public static class FunctionLibrary {
     public static Vector3 Torus(float u, float v, float t) {
         // float torusRadius = .75f;
         // float ringRadius = .25f;
-        float torusRadius = .7f + .1f * Sin(PI * (6f * u + .5f * t));
-        float ringRadius = .15f + .05f * Sin(PI * (8f * u + 4f * v + 2f * t));
+        float torusRadius = .7f + .1f * Sin(PI * (8f * u + .5f * t));
+        float ringRadius = .15f + .05f * Sin(PI * (16f * u + 8f * v + 3f * t));
         float s = torusRadius + ringRadius * Cos(PI * v);
 
         Vector3 outPoint;

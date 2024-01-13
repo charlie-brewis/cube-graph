@@ -85,7 +85,7 @@ public class GPUGraph : MonoBehaviour {
             );
         }
 
-        var kernelFunctionIndex = (int)functionKey + (int) (transitioning ? transitionFunctionFrom : functionKey) * 5;
+        var kernelFunctionIndex = (int)functionKey + (int) (transitioning ? transitionFunctionFrom : functionKey) * FunctionLibrary.FunctionCount;
 
         // the 0 is the index of our kernel as compute shaders can have multiple kernels
         computeShader.SetBuffer(kernelFunctionIndex, positionsId, positionsBuffer);

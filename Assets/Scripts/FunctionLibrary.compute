@@ -71,7 +71,7 @@ float3 Ripple (float u, float v, float t) {
 
 
 float3 Sphere (float u, float v, float t) {
-    float r = .9 + .1 * sin(PI * (6.0 * u + 4.0 * v + t));
+    float r = .9 + .1 * sin(PI * (12.0 * u + 8.0 * v + t));
     float s = r * cos(0.5 * PI * v);
 
     float3 outPoint;
@@ -82,8 +82,8 @@ float3 Sphere (float u, float v, float t) {
 } 
 
 float3 Torus(float u, float v, float t) {
-    float torusRadius = .7 + .1 * sin(PI * (6.0 * u + .5 * t));
-    float ringRadius = .15 + .05 * sin(PI * (8.0 * u + 4.0 * v + 2.0 * t));
+    float torusRadius = .7 + .1 * sin(PI * (8.0 * u + .5 * t));
+    float ringRadius = .15 + .05 * sin(PI * (16.0 * u + 8.0 * v + 3.0 * t));
     float s = torusRadius + ringRadius * cos(PI * v);
 
     float3 outPoint;
