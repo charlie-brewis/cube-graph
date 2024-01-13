@@ -1,8 +1,34 @@
 // These are the functions that can be returned by this script
+// Function index is treated as functionTo + functionFrom * 5, where non-transition functions have from and to as the same function
+// I.e., From Wave To Wave, DoubleWave, Ripple, Sphere, Torus; From DoubleWave To ... etc
 #pragma kernel WaveKernel
+#pragma kernel WaveToDoubleWaveKernel
+#pragma kernel WaveToRippleKernel
+#pragma kernel WaveToSphereKernel
+#pragma kernel WaveToTorusKernel
+
+#pragma kernel DoubleWaveToWaveKernel
 #pragma kernel DoubleWaveKernel
+#pragma kernel DoubleWaveToRippleKernel
+#pragma kernel DoubleWaveToSphereKernel
+#pragma kernel DoubleWaveToTorusKernel
+
+#pragma kernel RippleToWaveKernel
+#pragma kernel RippleToDoubleWaveKernel
 #pragma kernel RippleKernel
+#pragma kernel RippleToSphereKernel
+#pragma kernel RippleToTorusKernel
+
+#pragma kernel SphereToWaveKernel
+#pragma kernel SphereToDoubleWaveKernel
+#pragma kernel SphereToRippleKernel
 #pragma kernel SphereKernel
+#pragma kernel SphereToTorusKernel
+
+#pragma kernel TorusToWaveKernel
+#pragma kernel TorusToDoubleWaveKernel
+#pragma kernel TorusToRippleKernel
+#pragma kernel TorusToSphereKernel
 #pragma kernel TorusKernel
 
 #define PI 3.14159265358979323846
@@ -12,7 +38,7 @@ RWStructuredBuffer<float3> _Positions;
 
 uint _Resolution;
 
-float _Step, _Time;
+float _Step, _Time, _TransitionProgress;
 
 
 float3 Wave(float u, float v, float t) {
@@ -96,9 +122,46 @@ void SetPosition (uint3 id, float3 position) {
         SetPosition(id, function(uv.x, uv.y, _Time)); \
     }
 
+#define KERNEL_MORPH_FUNCTION(functionFrom, functionTo) \
+    [numthreads(8, 8, 1)] \
+    void functionFrom##To##functionTo##Kernel (uint3 id: SV_DispatchThreadID) { \
+        float2 uv = GetUV(id); \
+        float3 position = lerp( \
+            functionFrom(uv.x, uv.y, _Time), functionTo(uv.x, uv.y, _Time), \
+            _TransitionProgress \
+        ); \
+        SetPosition(id, position); \
+    }
+
 // All 6 kernel functions can now be defined by invoking the KERNEL_FUNCTION macro defined above
 KERNEL_FUNCTION(Wave)
 KERNEL_FUNCTION(DoubleWave)
 KERNEL_FUNCTION(Ripple)
 KERNEL_FUNCTION(Sphere)
 KERNEL_FUNCTION(Torus)
+
+// We have to define a seperate morph kernel function for every to, from pair
+KERNEL_MORPH_FUNCTION(Wave, DoubleWave);
+KERNEL_MORPH_FUNCTION(Wave, Ripple);
+KERNEL_MORPH_FUNCTION(Wave, Sphere);
+KERNEL_MORPH_FUNCTION(Wave, Torus);
+
+KERNEL_MORPH_FUNCTION(DoubleWave, Wave);
+KERNEL_MORPH_FUNCTION(DoubleWave, Ripple);
+KERNEL_MORPH_FUNCTION(DoubleWave, Sphere);
+KERNEL_MORPH_FUNCTION(DoubleWave, Torus);
+
+KERNEL_MORPH_FUNCTION(Ripple, Wave);
+KERNEL_MORPH_FUNCTION(Ripple, DoubleWave);
+KERNEL_MORPH_FUNCTION(Ripple, Sphere);
+KERNEL_MORPH_FUNCTION(Ripple, Torus);
+
+KERNEL_MORPH_FUNCTION(Sphere, Wave);
+KERNEL_MORPH_FUNCTION(Sphere, DoubleWave);
+KERNEL_MORPH_FUNCTION(Sphere, Ripple);
+KERNEL_MORPH_FUNCTION(Sphere, Torus);
+
+KERNEL_MORPH_FUNCTION(Torus, Wave);
+KERNEL_MORPH_FUNCTION(Torus, DoubleWave);
+KERNEL_MORPH_FUNCTION(Torus, Ripple);
+KERNEL_MORPH_FUNCTION(Torus, Sphere);

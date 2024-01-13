@@ -8,7 +8,8 @@ public class GPUGraph : MonoBehaviour {
         positionsId = Shader.PropertyToID("_Positions"),
         resolutionId = Shader.PropertyToID("_Resolution"),
         stepId = Shader.PropertyToID("_Step"),
-        timeId = Shader.PropertyToID("_Time");
+        timeId = Shader.PropertyToID("_Time"),
+        transitionProgressId = Shader.PropertyToID("_TransitionProgress");
 
     [SerializeField]
     Material material;
@@ -77,8 +78,14 @@ public class GPUGraph : MonoBehaviour {
         computeShader.SetInt(resolutionId, resolution);
         computeShader.SetFloat(stepId, step);
         computeShader.SetFloat(timeId, Time.time);
+        if (transitioning) {
+            computeShader.SetFloat(
+                transitionProgressId,
+                Mathf.SmoothStep(0f, 1f, currDuration / transitionDuration)
+            );
+        }
 
-        var kernelFunctionIndex = (int)functionKey;
+        var kernelFunctionIndex = (int)functionKey + (int) (transitioning ? transitionFunctionFrom : functionKey) * 5;
 
         // the 0 is the index of our kernel as compute shaders can have multiple kernels
         computeShader.SetBuffer(kernelFunctionIndex, positionsId, positionsBuffer);
